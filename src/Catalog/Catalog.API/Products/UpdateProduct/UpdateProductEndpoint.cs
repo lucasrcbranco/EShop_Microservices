@@ -8,7 +8,7 @@ public sealed record UpdateProductRequest(
     decimal Price,
     List<string> Categories);
 
-public sealed record UpdateProductResponse(Product Product);
+public sealed record UpdateProductResponse(bool IsSuccess);
 
 public class UpdateProductEndpoint : ICarterModule
 {
@@ -23,6 +23,7 @@ public class UpdateProductEndpoint : ICarterModule
         })
         .Produces<UpdateProductResponse>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
+        .ProducesProblem(StatusCodes.Status404NotFound)
         .WithName("UpdateProduct")
         .WithDescription("Updates an Existing Product")
         .WithSummary("Updates an Existing Product");

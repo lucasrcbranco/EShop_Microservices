@@ -8,9 +8,9 @@ public sealed record UpdateProductCommand(
     decimal Price,
     List<string> Categories) : ICommand<UpdateProductResult>;
 
-public sealed record UpdateProductResult(Product Product);
+public sealed record UpdateProductResult(bool IsSuccess);
 
-internal class UpdateProductCommandHandler(IDocumentSession session, Logger<UpdateProductCommandHandler> logger)
+internal class UpdateProductCommandHandler(IDocumentSession session, ILogger<UpdateProductCommandHandler> logger)
     : ICommandHandler<UpdateProductCommand, UpdateProductResult>
 {
     public async Task<UpdateProductResult> Handle(UpdateProductCommand command, CancellationToken cancellationToken)
@@ -28,6 +28,6 @@ internal class UpdateProductCommandHandler(IDocumentSession session, Logger<Upda
         session.Store(product);
         await session.SaveChangesAsync(cancellationToken);
 
-        return new UpdateProductResult(product);
+        return new UpdateProductResult(true);
     }
 }

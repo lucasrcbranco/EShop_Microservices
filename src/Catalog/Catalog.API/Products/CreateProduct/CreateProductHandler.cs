@@ -11,7 +11,7 @@ public sealed record CreateProductCommand(
 
 public sealed record CreateProductResult(Guid Id);
 
-internal class CreateProductCommandHandler(IDocumentSession session, Logger<CreateProductCommandHandler> logger)
+internal class CreateProductCommandHandler(IDocumentSession session, ILogger<CreateProductCommandHandler> logger)
     : ICommandHandler<CreateProductCommand, CreateProductResult>
 {
     public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
