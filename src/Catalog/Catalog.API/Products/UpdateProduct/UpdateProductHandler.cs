@@ -19,13 +19,19 @@ internal class UpdateProductCommandHandler(IDocumentSession session, ILogger<Upd
 
         var product = await session.LoadAsync<Product>(command.Id, cancellationToken);
 
-        if(product is null)
+        if (product is null)
         {
             throw new ProductNotFoundException();
         }
 
-        product.Update(command.Name, command.Description, command.ImageFile, command.Price, command.Categories);
-        session.Store(product);
+        product.Update(
+            command.Name,
+            command.Description,
+            command.ImageFile,
+            command.Price,
+            command.Categories);
+
+        session.Update(product);
         await session.SaveChangesAsync(cancellationToken);
 
         return new UpdateProductResult(true);
