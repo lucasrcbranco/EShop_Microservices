@@ -1,4 +1,6 @@
-﻿namespace Catalog.API.Products.CreateProduct;
+﻿using Microsoft.Extensions.Logging;
+
+namespace Catalog.API.Products.CreateProduct;
 
 public sealed record CreateProductCommand(
     string Name,
@@ -9,11 +11,13 @@ public sealed record CreateProductCommand(
 
 public sealed record CreateProductResult(Guid Id);
 
-internal class CreateProductCommandHandler(IDocumentSession session)
+internal class CreateProductCommandHandler(IDocumentSession session, Logger<CreateProductCommandHandler> logger)
     : ICommandHandler<CreateProductCommand, CreateProductResult>
 {
     public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
     {
+        logger.LogInformation("CreateProductCommandHandler.Handle called with {@Command}", command);
+
         var product = new Product(
             command.Name,
             command.Description,
