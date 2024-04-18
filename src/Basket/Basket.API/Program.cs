@@ -3,6 +3,8 @@ var builder = WebApplication.CreateBuilder(args);
 var assemblyMarker = typeof(Program).Assembly;
 var connectionString = builder.Configuration.GetConnectionString("Database")!;
 
+builder.Services.AddTransient<IBasketRepository, BasketRepository>();
+
 builder.Services.AddMediatR(config =>
 {
     config.RegisterServicesFromAssemblies(assemblyMarker);

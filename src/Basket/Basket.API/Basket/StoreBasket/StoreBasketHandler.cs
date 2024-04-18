@@ -14,10 +14,11 @@ public class StoreBasketCommandValidator : AbstractValidator<StoreBasketCommand>
     }
 }
 
-public class StoreBasketCommandHandler : ICommandHandler<StoreBasketCommand, StoreBasketResult>
+public class StoreBasketCommandHandler(IBasketRepository basketRepository) : ICommandHandler<StoreBasketCommand, StoreBasketResult>
 {
-    public Task<StoreBasketResult> Handle(StoreBasketCommand command, CancellationToken cancellationToken)
+    public async Task<StoreBasketResult> Handle(StoreBasketCommand command, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
-    }
+        var result = await basketRepository.StoreBasketAsync(command.Cart, cancellationToken);
+        return new StoreBasketResult(result.UserName);
+    }   
 }

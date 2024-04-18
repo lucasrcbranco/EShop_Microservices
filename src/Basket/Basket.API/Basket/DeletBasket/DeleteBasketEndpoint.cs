@@ -14,8 +14,8 @@ public class DeleteBasketEndpoint : ICarterModule
         })
         .Produces<DeleteBasketResponse>(StatusCodes.Status204NoContent)
         .ProducesProblem(StatusCodes.Status400BadRequest)
-        .WithName("GetBasketByUserName")
-        .WithSummary("Get basket by username")
-        .WithDescription("Get basket by username");
+        .WithName("DeleteBasketByUserName")
+        .WithSummary("Deletes an existing basket by username")
+        .WithDescription("Deletes an existing basket by username");
     }
 }
