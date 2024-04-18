@@ -3,7 +3,7 @@ var builder = WebApplication.CreateBuilder(args);
 var assemblyMarker = typeof(Program).Assembly;
 var connectionString = builder.Configuration.GetConnectionString("Database")!;
 
-builder.Services.AddTransient<IBasketRepository, BasketRepository>();
+builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 
 builder.Services.AddMediatR(config =>
 {
@@ -22,8 +22,12 @@ builder.Services.AddMarten(config =>
     config.Schema.For<ShoppingCart>().Identity(sc => sc.UserName);
 }).UseLightweightSessions();
 
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+
 var app = builder.Build();
 
 app.MapCarter();
+
+app.UseExceptionHandler(options => { });
 
 app.Run();
