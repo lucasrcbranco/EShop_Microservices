@@ -1,5 +1,4 @@
-﻿using Marten.Schema;
-
+﻿
 namespace Catalog.API.Data;
 
 public class CatalogInitialData : IInitialData
