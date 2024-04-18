@@ -1,6 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 
 var assemblyMarker = typeof(Program).Assembly;
+var connectionString = builder.Configuration.GetConnectionString("Database")!;
 
 builder.Services.AddMediatR(config =>
 {
@@ -13,6 +14,11 @@ builder.Services.AddValidatorsFromAssembly(assemblyMarker);
 
 builder.Services.AddCarter();
 
+builder.Services.AddMarten(config =>
+{
+    config.Connection(connectionString);
+    config.Schema.For<ShoppingCart>().Identity(sc => sc.UserName);
+}).UseLightweightSessions();
 
 var app = builder.Build();
 
