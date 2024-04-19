@@ -1,7 +1,10 @@
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 var assemblyMarker = typeof(Program).Assembly;
 var connectionString = builder.Configuration.GetConnectionString("Database")!;
+var redisConnectionstring = builder.Configuration.GetConnectionString("Redis")!;
 
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 builder.Services.Decorate<IBasketRepository, CachedBasketRepository>();
@@ -25,16 +28,25 @@ builder.Services.AddMarten(config =>
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.Configuration = redisConnectionstring;
     //options.InstanceName = "Basket";
 });
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+
+builder.Services.AddHealthChecks()
+    .AddNpgSql(connectionString)
+    .AddRedis(redisConnectionstring);
 
 var app = builder.Build();
 
 app.MapCarter();
 
 app.UseExceptionHandler(options => { });
+
+app.UseHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 app.Run();
