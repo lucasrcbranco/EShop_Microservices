@@ -7,7 +7,7 @@ public class Coupon
     public string Description { get; set; } = default!;
     public int Amount { get; set; }
 
-    private Coupon()
+    public Coupon()
     {
 
     }
