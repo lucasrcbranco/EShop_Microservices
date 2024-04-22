@@ -1,5 +1,3 @@
-
-
 var builder = WebApplication.CreateBuilder(args);
 
 var assemblyMarker = typeof(Program).Assembly;
@@ -30,6 +28,19 @@ builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = redisConnectionstring;
     //options.InstanceName = "Basket";
+});
+
+builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(options =>
+{
+    options.Address = new Uri(builder.Configuration["GrpcSettings:DiscountUrl"]!);
+}).ConfigurePrimaryHttpMessageHandler(() =>
+{
+    var handler = new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+    };
+
+    return handler;
 });
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();

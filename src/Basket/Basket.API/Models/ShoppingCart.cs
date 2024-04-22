@@ -4,7 +4,7 @@ public class ShoppingCart
 {
     public string UserName { get; set; } = default!;
     public List<ShoppingCartItem> Items { get; set; } = [];
-    public decimal CartTotal => Items.Sum(i => i.Total);
+    public decimal CartTotal => Items.Sum(i => i.Quantity * i.Price);
 
     public ShoppingCart()
     {
