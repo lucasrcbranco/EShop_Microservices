@@ -1,12 +1,12 @@
 ﻿namespace Ordering.Domain.Models;
 
-public class Order : Aggregate<Guid>
+public class Order : Aggregate<OrderId>
 {
-    private readonly List<OrderItem> _items = new();
-    public IReadOnlyList<OrderItem> Items => _items.AsReadOnly();
+    private readonly List<OrderItem> _orderItems = new();
+    public IReadOnlyList<OrderItem> OrderItems => _orderItems.AsReadOnly();
 
-    public Guid CustomerId { get; private set; } = default!;
-    public string OrderName { get; private set; } = default!;
+    public CustomerId CustomerId { get; private set; } = default!;
+    public OrderName OrderName { get; private set; } = default!;
 
     public Address ShippingAddress { get; private set; } = default!;
     public Address BillingAddress { get; private set; } = default!;
@@ -15,7 +15,21 @@ public class Order : Aggregate<Guid>
 
     public decimal TotalPrice
     {
-        get => _items.Sum(i => i.Price * i.Quantity);
+        get => _orderItems.Sum(i => i.Price * i.Quantity);
         private set { }
+    }
+
+    public void AddOrderItem(OrderItem item)
+    {
+        _orderItems.Add(item);
+    }
+
+    public void RemoveOrderItem(OrderItemId itemId)
+    {
+        var item = _orderItems.FirstOrDefault(i => i.Id == itemId);
+        if (item is not null)
+        {
+            _orderItems.Remove(item);
+        }
     }
 }
