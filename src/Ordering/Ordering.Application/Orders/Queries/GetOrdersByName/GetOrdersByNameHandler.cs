@@ -11,6 +11,6 @@ public class GetOrdersByNameHandler(IApplicationDbContext dbContext)
             .OrderBy(o => o.OrderName.Value)
             .ToListAsync(cancellationToken);
 
-        return new GetOrdersByNameResult(orders.ProjectToOrderDto());
+        return new GetOrdersByNameResult(orders.ToOrderDtoList());
     }
 }
