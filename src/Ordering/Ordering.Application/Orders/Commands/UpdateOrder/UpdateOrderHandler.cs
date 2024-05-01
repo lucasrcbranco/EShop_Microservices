@@ -1,19 +1,27 @@
-﻿namespace Ordering.Application.Orders.Commands.CreateOrder;
+﻿namespace Ordering.Application.Orders.Commands.UpdateOrder;
 
-public class CreateOrderHandler(IApplicationDbContext dbContext)
-    : ICommandHandler<CreateOrderCommand, CreateOrderResult>
+public class UpdateOrderHandler(IApplicationDbContext dbContext)
+    : ICommandHandler<UpdateOrderCommand, UpdateOrderResult>
 {
-    public async Task<CreateOrderResult> Handle(CreateOrderCommand command, CancellationToken cancellationToken)
+    public async Task<UpdateOrderResult> Handle(UpdateOrderCommand command, CancellationToken cancellationToken)
     {
-        Order order = CreateNewOrder(command.Order);
+        OrderId orderId = OrderId.Of(command.Order.Id);
+        Order? order = await dbContext.Orders.FindAsync([orderId], cancellationToken: cancellationToken);
 
-        await dbContext.Orders.AddAsync(order, cancellationToken);
+        if (order is null)
+        {
+            throw new OrderNotFoundException(command.Order.Id);
+        }
+
+        UpdateOrder(order, command.Order);
+
+        dbContext.Orders.Update(order);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return new CreateOrderResult(order.Id.Value);
+        return new UpdateOrderResult(true);
     }
 
-    private Order CreateNewOrder(OrderDto orderDto)
+    private void UpdateOrder(Order order, OrderDto orderDto)
     {
         var shippingAddress = Address.Of(
             orderDto.ShippingAddress.FirstName,
@@ -40,19 +48,11 @@ public class CreateOrderHandler(IApplicationDbContext dbContext)
             orderDto.Payment.Cvv,
             orderDto.Payment.PaymentMethod);
 
-        var order = Order.Create(
-             OrderId.Of(Guid.NewGuid()),
-             CustomerId.Of(orderDto.CustomerId),
-             OrderName.Of(orderDto.OrderName),
-             shippingAddress,
-             billingAddress,
-             payment);
-
-        foreach (var orderItemDto in orderDto.OrderItems)
-        {
-            order.AddItem(ProductId.Of(orderItemDto.ProductId), orderItemDto.Quantity, orderItemDto.Price);
-        }
-
-        return order;
+        order.Update(
+            OrderName.Of(orderDto.OrderName),
+            shippingAddress,
+            billingAddress,
+            payment,
+            orderDto.Status);
     }
 }
