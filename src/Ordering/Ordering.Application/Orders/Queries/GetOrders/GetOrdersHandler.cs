@@ -7,6 +7,7 @@ public class GetOrdersHandler(IApplicationDbContext dbContext)
     {
         List<Order> orders = await dbContext.Orders
             .AsNoTracking()
+            .Include(o => o.OrderItems)
             .Skip(query.PaginationRequest.PageIndex * query.PaginationRequest.PageSize)
             .Take(query.PaginationRequest.PageSize)
             .OrderBy(o => o.OrderName.Value)

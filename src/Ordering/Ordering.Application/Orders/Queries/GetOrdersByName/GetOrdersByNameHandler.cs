@@ -7,6 +7,7 @@ public class GetOrdersByNameHandler(IApplicationDbContext dbContext)
     {
         List<Order> orders = await dbContext.Orders
             .AsNoTracking()
+            .Include(o => o.OrderItems)
             .Where(o => o.OrderName == OrderName.Of(query.Name))
             .OrderBy(o => o.OrderName.Value)
             .ToListAsync(cancellationToken);
