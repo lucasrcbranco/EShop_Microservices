@@ -27,7 +27,6 @@ builder.Services.AddMarten(config =>
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = redisConnectionstring;
-    //options.InstanceName = "Basket";
 });
 
 builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(options =>
