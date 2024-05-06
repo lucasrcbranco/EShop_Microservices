@@ -15,7 +15,8 @@ public class StoreBasketEndpoint : ICarterModule
         })
         .Produces<StoreBasketResponse>(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status400BadRequest)
-        .WithName("UpsertBasket")
+        .ProducesProblem(StatusCodes.Status500InternalServerError)
+        .WithName("StoreBasket")
         .WithSummary("Inserts a new basket or Updates an existing one")
         .WithDescription("Inserts a new basket or Updates an existing one");
     }
