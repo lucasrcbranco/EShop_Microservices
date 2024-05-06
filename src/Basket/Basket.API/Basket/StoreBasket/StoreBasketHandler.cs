@@ -1,8 +1,4 @@
-﻿
-
-using Discount.Grpc;
-
-namespace Basket.API.Basket.StoreBasket;
+﻿namespace Basket.API.Basket.StoreBasket;
 
 public sealed record StoreBasketCommand(ShoppingCart Cart) : ICommand<StoreBasketResult>;
 public sealed record StoreBasketResult(string UserName);
