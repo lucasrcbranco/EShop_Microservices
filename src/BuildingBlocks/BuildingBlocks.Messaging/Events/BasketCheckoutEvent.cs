@@ -23,4 +23,12 @@ public sealed record BasketCheckoutEvent : IntegrationEvent
     public string CVV { get; set; } = default!;
     public int PaymentMethod { get; set; } = default!;
     #endregion
+
+    public List<OrderItemEventDto> OrderItems { get; set; } = default!;
 }
+
+public sealed record OrderItemEventDto(
+    Guid OrderId,
+    Guid ProductId,
+    int Quantity,
+    decimal Price);
