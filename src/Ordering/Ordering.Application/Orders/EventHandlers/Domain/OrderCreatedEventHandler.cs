@@ -10,7 +10,7 @@ public class OrderCreatedEventHandler(IPublishEndpoint publisher, IFeatureManage
     {
         logger.LogInformation("Domain Event handled: {DomainEvent}", domainEvent.GetType().Name);
 
-        if (await featureManager.IsEnabledAsync("FeatureManagement"))
+        if (await featureManager.IsEnabledAsync("OrderFullfilment"))
         {
             var orderCreatedIntegrationEvent = domainEvent.order.ToOrderDto();
 
