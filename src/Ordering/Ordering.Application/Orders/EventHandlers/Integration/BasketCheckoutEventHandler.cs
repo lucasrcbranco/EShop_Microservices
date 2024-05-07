@@ -48,7 +48,7 @@ public class BasketCheckoutEventHandler(ISender sender, ILogger<BasketCheckoutEv
 
         foreach (var item in message.OrderItems)
         {
-            orderDto.OrderItems.Add(new OrderItemDto(item.OrderId, item.ProductId, item.Quantity, item.Price));
+            orderDto.OrderItems.Add(new OrderItemDto(orderId, item.ProductId, item.Quantity, item.Price));
         }
 
         return new CreateOrderCommand(orderDto);
